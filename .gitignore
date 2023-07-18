@@ -1,0 +1,5 @@
+ALU/output_files/*
+ALU/ncremental_db/*
+ALU/simulation/*
+ALU/db/*
+*.vwf
