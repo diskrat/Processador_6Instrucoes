@@ -2,32 +2,16 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity abext is
-    port(x, y, z, a, b: in std_logic;
+    port(x, y a, b: in std_logic;
 	      ia, ib: out std_logic);
 end ;
 
 architecture arc of abext is
 begin
-    ia <=  (not(x) and not(y) and not(z) and a and not(b)) or
-            (not(x) and not(y) and not(z) and a and b) or
-            (not(x) and not(y) and z and a and not(b)) or
-            (not(x) and not(y) and z and a and b) or
-            (not(x) and y and not(z) and a and not(b)) or
-            (not(x) and y and not(z) and a and b) or
-            (not(x) and y and z and a and not(b)) or
-            (not(x) and y and z and a and b) or
-            (x and not(y) and not(z) and a and b) or
-            (x and not(y) and z and not(a) and b) or 
-            (x and not(y) and z and a and not(b)) or
-            (x and not(y) and z and a and b) or
-            (x and y and not(z) and not(a) and b) or
-            (x and y and not(z) and a and not(b)) or
-            (x and y and z and not(a) and not(b)) or
-            (x and y and z and not(a) and b);
+        --x'y'a +x'ya+ x'ya
+    ia <=  a and not(x and y);
 
 
-    ib <=   (not(x) and not(y) and not(z) and not(a) and b) or 
-            (not(x) and not(y) and not(z) and a and b) or
-            (not(x) and not(y) and z and not(a) and not(b)) or
-            (not(x) and not(y) and z and a and not(b));
+    ib <=   (b and not(x) and y) xor (not(b) and x and not(y));
+            
 end arc;
