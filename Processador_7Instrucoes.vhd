@@ -23,7 +23,7 @@ architecture arch of Processador_7Instrucoes is
       RF_Rp_zero: in std_logic;
       I_data : in std_logic_vector(WIDTH-1 downto 0);
       PC_set : in std_logic_vector(WIDTH-1 downto 0);
-      I_rd, D_rd, D_wr, RF_W_Wen, RF_Rp_Ren, RF_Rq_Ren : out std_logic;
+      I_rd, D_rd, D_wr, RF_W_Wen, RF_Rp_Ren, RF_Rq_Ren,D_sel : out std_logic;
       RF_W_addr, RF_Rp_addr, RF_Rq_addr : out std_logic_vector(3 DOWNTO 0);
       RF_Sel, ALU_Sel : out std_logic_vector(1 DOWNTO 0);
       D_addr, RF_W_Data : out std_logic_vector(7 DOWNTO 0);
@@ -60,6 +60,14 @@ architecture arch of Processador_7Instrucoes is
       data: out std_logic_vector(WIDTH - 1 downto 0)
     ) ;
   end component;
+  component Mux2x1_16bit is
+    port (
+      s:in  std_logic;
+      a,b: in std_logic_vector(WIDTH - 1 downto 0);
+
+      q: out std_logic_vector(WIDTH - 1 downto 0)
+    );
+  end component;
 
   --- Sinais Control unit para/de I_memory
   signal Cu_to_I_Mem: std_logic_vector(I_ADDR_MSIZE - 1 downto 0);
@@ -67,7 +75,6 @@ architecture arch of Processador_7Instrucoes is
   signal I_Mem_to_Cu: std_logic_vector(WIDTH - 1 downto 0);
 
   --- Sinais Control unit de/para D_memory
-  signal Cu_to_D_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
   signal Cu_to_D_rd,Cu_to_D_wr: std_logic;
   --- Sinais Datapath de/para D_memory
   signal Dp_to_D_Memory, D_Memory_to_Dp: std_logic_vector(WIDTH - 1 downto 0);
@@ -77,14 +84,17 @@ architecture arch of Processador_7Instrucoes is
   signal Cu_to_DP_RF_W_addr,Cu_to_DP_RF_Rp_addr,Cu_to_DP_RF_Rq_addr: std_logic_vector(RF_ADDR_MSIZE-1 downto 0);
   signal Dp_to_Cu_RF_Rp_zero: std_logic;
   signal Cu_to_RF_Sel, Cu_to_Alu_sel: std_logic_vector(1 downto 0);
-
+  --- Sinal Mux2x1 to D_memory
+  signal Mux_to_D_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
+  --- Sinal ControlUnit to Mux
+  signal Cu_to_Mux_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
 
 
 begin
   --- I_memory 
   i0: I_Memory port map(addr => Cu_to_I_Mem, rd => Cu_to_I_Mem_rd, clk => clk, data => I_Mem_to_Cu);
   --- D_memory
-  d0: D_Memory port map(Wdata => Dp_to_D_Memory,addr => Cu_to_D_addr,Wen => Cu_to_D_wr,Ren => Cu_to_D_rd,
+  d0: D_Memory port map(Wdata => Dp_to_D_Memory,addr => Mux_to_D_addr,Wen => Cu_to_D_wr,Ren => Cu_to_D_rd,
               clk => clk, Rdata => D_Memory_to_Dp);
   --- Datapath
   dp0: Datapath port map(clk => clk, W_wr =>Cu_to_DP_W_wr,Rp_rd => Cu_to_DP_Rp_rd, Rq_rd => Cu_to_DP_Rq_rd,
@@ -99,6 +109,6 @@ begin
             I_rd=>Cu_to_I_Mem_rd, D_rd=>Cu_to_D_rd, D_wr=>Cu_to_D_wr, RF_W_Wen=>Cu_to_DP_W_wr, RF_Rp_Ren=>Cu_to_DP_Rp_rd, RF_Rq_Ren=>Cu_to_DP_Rq_rd,
             RF_W_addr=>Cu_to_DP_RF_W_addr, RF_Rp_addr=>Cu_to_DP_RF_Rp_addr, RF_Rq_addr=> Cu_to_DP_RF_Rq_addr,
             RF_Sel=> Cu_to_RF_Sel, ALU_Sel=> Cu_to_Alu_sel ,
-            D_addr=>Cu_to_D_addr, RF_W_Data=>Cu_to_Dp_W_data,
-            I_addr=>Cu_to_I_Mem);
+            D_addr=>Cu_to_Mux_addr, RF_W_Data=>Cu_to_Dp_W_data,
+            I_addr=>Cu_to_I_Mem,D_sel => );
 end arch ; -- arch

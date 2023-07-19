@@ -13,6 +13,7 @@ entity ControlUnit is
         RF_W_Wen        : out    vl_logic;
         RF_Rp_Ren       : out    vl_logic;
         RF_Rq_Ren       : out    vl_logic;
+        D_sel           : out    vl_logic;
         RF_W_addr       : out    vl_logic_vector(3 downto 0);
         RF_Rp_addr      : out    vl_logic_vector(3 downto 0);
         RF_Rq_addr      : out    vl_logic_vector(3 downto 0);

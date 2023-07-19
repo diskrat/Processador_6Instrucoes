@@ -5,6 +5,7 @@ entity ControlUnit_vlg_check_tst is
         ALU_Sel         : in     vl_logic_vector(1 downto 0);
         D_addr          : in     vl_logic_vector(7 downto 0);
         D_rd            : in     vl_logic;
+        D_sel           : in     vl_logic;
         D_wr            : in     vl_logic;
         I_addr          : in     vl_logic_vector(15 downto 0);
         I_rd            : in     vl_logic;

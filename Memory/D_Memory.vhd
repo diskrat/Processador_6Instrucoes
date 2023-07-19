@@ -4,8 +4,8 @@ use ieee.numeric_std.all;
 
 entity D_Memory is
     generic (
-        N : natural := 8; -- NÃºmero de bits para endereÃ§amento
-        M : natural := 16 -- NÃºmero de bits para dados
+        N : natural := 8; -- Numero de bits para endereÃ§amento
+        M : natural := 16 -- Numero de bits para dados
     );
     port (
         clk     : in  std_logic;

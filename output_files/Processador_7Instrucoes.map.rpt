@@ -1,5 +1,5 @@
 Analysis & Synthesis report for Processador_7Instrucoes
-Wed Jul 19 12:03:36 2023
+Wed Jul 19 16:09:36 2023
 Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
 
 
@@ -19,9 +19,8 @@ Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edit
  11. Parameter Settings for User Entity Instance: Top-level Entity: |ControlUnit
  12. Parameter Settings for User Entity Instance: IR:InstructionReader
  13. Parameter Settings for User Entity Instance: PC:PCounter
- 14. Port Connectivity Checks: "controller:Control"
- 15. Elapsed Time Per Partition
- 16. Analysis & Synthesis Messages
+ 14. Elapsed Time Per Partition
+ 15. Analysis & Synthesis Messages
 
 
 
@@ -47,16 +46,16 @@ applicable agreement for further details.
 +--------------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Wed Jul 19 12:03:35 2023           ;
+; Analysis & Synthesis Status        ; Successful - Wed Jul 19 16:09:36 2023           ;
 ; Quartus II 64-Bit Version          ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition ;
 ; Revision Name                      ; Processador_7Instrucoes                         ;
 ; Top-level Entity Name              ; ControlUnit                                     ;
 ; Family                             ; Cyclone IV GX                                   ;
-; Total logic elements               ; 111                                             ;
-;     Total combinational functions  ; 93                                              ;
+; Total logic elements               ; 116                                             ;
+;     Total combinational functions  ; 98                                              ;
 ;     Dedicated logic registers      ; 43                                              ;
 ; Total registers                    ; 43                                              ;
-; Total pins                         ; 89                                              ;
+; Total pins                         ; 90                                              ;
 ; Total virtual pins                 ; 0                                               ;
 ; Total memory bits                  ; 0                                               ;
 ; Embedded Multiplier 9-bit elements ; 0                                               ;
@@ -182,12 +181,12 @@ Parallel compilation was disabled, but you have multiple processors available. E
 +--------------------------+------------------+
 ; Resource                 ; Usage            ;
 +--------------------------+------------------+
-; I/O pins                 ; 89               ;
+; I/O pins                 ; 90               ;
 ; DSP block 9-bit elements ; 0                ;
 ; Maximum fan-out node     ; clk~input        ;
 ; Maximum fan-out          ; 43               ;
-; Total fan-out            ; 564              ;
-; Average fan-out          ; 1.80             ;
+; Total fan-out            ; 582              ;
+; Average fan-out          ; 1.81             ;
 +--------------------------+------------------+
 
 
@@ -196,10 +195,10 @@ Parallel compilation was disabled, but you have multiple processors available. E
 +----------------------------+-------------------+--------------+-------------+--------------+---------+-----------+-----------+------+--------------+-----------------------------------+--------------+
 ; Compilation Hierarchy Node ; LC Combinationals ; LC Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; DSP 36x36 ; Pins ; Virtual Pins ; Full Hierarchy Name               ; Library Name ;
 +----------------------------+-------------------+--------------+-------------+--------------+---------+-----------+-----------+------+--------------+-----------------------------------+--------------+
-; |ControlUnit               ; 93 (0)            ; 43 (0)       ; 0           ; 0            ; 0       ; 0         ; 0         ; 89   ; 0            ; |ControlUnit                      ; work         ;
+; |ControlUnit               ; 98 (0)            ; 43 (0)       ; 0           ; 0            ; 0       ; 0         ; 0         ; 90   ; 0            ; |ControlUnit                      ; work         ;
 ;    |IR:InstructionReader|  ; 0 (0)             ; 16 (16)      ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |ControlUnit|IR:InstructionReader ; work         ;
 ;    |PC:PCounter|           ; 49 (49)           ; 16 (16)      ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |ControlUnit|PC:PCounter          ; work         ;
-;    |controller:Control|    ; 44 (44)           ; 11 (11)      ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |ControlUnit|controller:Control   ; work         ;
+;    |controller:Control|    ; 49 (49)           ; 11 (11)      ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |ControlUnit|controller:Control   ; work         ;
 +----------------------------+-------------------+--------------+-------------+--------------+---------+-----------+-----------+------+--------------+-----------------------------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
 
@@ -239,13 +238,13 @@ Encoding Type:  One-Hot
 +----------------------------------------------+-------+
 
 
-+---------------------------------------------------------------------------------------------------------------------------------------------------+
-; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                    ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------+
-; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output          ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------+
-; 4:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |ControlUnit|PC:PCounter|PC_reg[14] ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------+
++--------------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                   ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output         ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------+
+; 4:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |ControlUnit|PC:PCounter|PC_reg[1] ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------+
 
 
 +-----------------------------------------------------------------------------+
@@ -278,15 +277,6 @@ Note: In order to hide this table in the UI and the text report file, please set
 Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
 
 
-+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Port Connectivity Checks: "controller:Control"                                                                                                                           ;
-+--------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
-; Port   ; Type  ; Severity ; Details                                                                                                                                      ;
-+--------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
-; cmp_gt ; Input ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
-+--------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
-
-
 +-------------------------------+
 ; Elapsed Time Per Partition    ;
 +----------------+--------------+
@@ -302,7 +292,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
     Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
-    Info: Processing started: Wed Jul 19 12:03:34 2023
+    Info: Processing started: Wed Jul 19 16:09:34 2023
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off Processador_7Instrucoes -c Processador_7Instrucoes
 Warning (20028): Parallel compilation is not licensed and has been disabled
 Info (12021): Found 2 design units, including 1 entities, in source file datapath/registerfile/registerfile.vhd
@@ -372,29 +362,6 @@ Info (12127): Elaborating entity "ControlUnit" for the top level hierarchy
 Info (12128): Elaborating entity "IR" for hierarchy "IR:InstructionReader"
 Info (12128): Elaborating entity "PC" for hierarchy "PC:PCounter"
 Info (12128): Elaborating entity "controller" for hierarchy "controller:Control"
-Warning (10631): VHDL Process Statement warning at controller.vhd(32): inferring latch(es) for signal or variable "nextState", which holds its previous value in one or more paths through the process
-Info (10041): Inferred latch for "nextState.LDAI" at controller.vhd(32)
-Info (10041): Inferred latch for "nextState.JumpIfZeroJmp" at controller.vhd(32)
-Info (10041): Inferred latch for "nextState.JumpIfZero" at controller.vhd(32)
-Info (10041): Inferred latch for "nextState.Subtract" at controller.vhd(32)
-Info (10041): Inferred latch for "nextState.LoadConst" at controller.vhd(32)
-Info (10041): Inferred latch for "nextState.Add" at controller.vhd(32)
-Info (10041): Inferred latch for "nextState.Store" at controller.vhd(32)
-Info (10041): Inferred latch for "nextState.Load" at controller.vhd(32)
-Info (10041): Inferred latch for "nextState.Decode" at controller.vhd(32)
-Info (10041): Inferred latch for "nextState.Fetch" at controller.vhd(32)
-Info (10041): Inferred latch for "nextState.Init" at controller.vhd(32)
-Warning (14026): LATCH primitive "controller:Control|nextState.LoadConst_354" is permanently enabled
-Warning (14026): LATCH primitive "controller:Control|nextState.Subtract_345" is permanently enabled
-Warning (14026): LATCH primitive "controller:Control|nextState.JumpIfZero_336" is permanently enabled
-Warning (14026): LATCH primitive "controller:Control|nextState.LDAI_318" is permanently enabled
-Warning (14026): LATCH primitive "controller:Control|nextState.Decode_390" is permanently enabled
-Warning (14026): LATCH primitive "controller:Control|nextState.Load_381" is permanently enabled
-Warning (14026): LATCH primitive "controller:Control|nextState.Store_372" is permanently enabled
-Warning (14026): LATCH primitive "controller:Control|nextState.Add_363" is permanently enabled
-Warning (14026): LATCH primitive "controller:Control|nextState.JumpIfZeroJmp_327" is permanently enabled
-Warning (14026): LATCH primitive "controller:Control|nextState.Fetch_399" is permanently enabled
-Warning (12241): 1 hierarchies have connectivity warnings - see the Connectivity Checks report folder
 Warning (13024): Output pins are stuck at VCC or GND
     Warning (13410): Pin "ALU_Sel[0]" is stuck at GND
 Info (286030): Timing-Driven Synthesis is running
@@ -417,13 +384,13 @@ Warning (21074): Design contains 16 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "PC_set[13]"
     Warning (15610): No output dependent on input pin "PC_set[14]"
     Warning (15610): No output dependent on input pin "PC_set[15]"
-Info (21057): Implemented 201 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 206 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 35 input pins
-    Info (21059): Implemented 54 output pins
-    Info (21061): Implemented 112 logic cells
-Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 32 warnings
-    Info: Peak virtual memory: 4675 megabytes
-    Info: Processing ended: Wed Jul 19 12:03:36 2023
+    Info (21059): Implemented 55 output pins
+    Info (21061): Implemented 116 logic cells
+Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 20 warnings
+    Info: Peak virtual memory: 4674 megabytes
+    Info: Processing ended: Wed Jul 19 16:09:36 2023
     Info: Elapsed time: 00:00:02
     Info: Total CPU time (on all processors): 00:00:01
 
