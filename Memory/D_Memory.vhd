@@ -1,24 +1,23 @@
 library IEEE;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
-entity Memory is
+entity D_Memory is
     generic(
         WIDTH: integer := 16;
-        ADDR_MSIZE: integer := 4
+        D_ADDR_MSIZE: integer := 4
     );
     port (
         Wdata: in std_logic_vector(WIDTH - 1 downto 0);
-        addr: in std_logic_vector(ADDR_MSIZE - 1 downto 0);
+        addr: in std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
         Wen, Ren, clk : in std_logic;
 	    Rdata: out std_logic_vector(WIDTH - 1 DOWNTO 0)
-    ---co: out std_logic
-  ) ;
-end Memory;
+    ) ;
+end D_Memory;
 
-architecture main of Memory is
+architecture main of D_Memory is
 component decoder is 
     port(
-        A: in std_logic_vector(ADDR_MSIZE - 1 downto 0);
+        A: in std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
         E: IN std_logic;
         Y: out std_logic_vector(WIDTH - 1 downto 0)
     ); 

@@ -5,9 +5,91 @@ use ieee.std_logic_unsigned.all;
 entity Processador_7Instrucoes is
     generic(
         WIDTH: integer := 16;
-        ADDR_MSIZE: integer := 4
+        RF_ADDR_MSIZE: integer := 4;
+        D_ADDR_MSIZE: integer := 8;
+        I_ADDR_MSIZE: integer :=16
     );
     port (
-    
-  ) ;
+      clk: in std_logic;
+    ) ;
 end Processador_7Instrucoes;
+architecture arch of Processador_7Instrucoes is
+
+  component ControlUnit is
+    port (
+      clk, reset : in std_logic;
+      RF_Rp_zero, cmp_gt : in std_logic;
+      I_data : in std_logic_vector(WIDTH-1 downto 0);
+      PC_set : in std_logic_vector(WIDTH-1 downto 0);
+      I_rd, D_rd, D_wr, RF_W_Wen, RF_Rp_Ren, RF_Rq_Ren : out std_logic;
+      RF_W_addr, RF_Rp_addr, RF_Rq_addr : out std_logic_vector(3 DOWNTO 0);
+      RF_Sel, ALU_Sel : out std_logic_vector(1 DOWNTO 0);
+      D_addr, RF_W_Data : out std_logic_vector(7 DOWNTO 0);
+      I_addr : out std_logic_vector(WIDTH-1 downto 0)
+    );
+  end component;
+  component Datapath is
+    port (
+      --- in
+      clk,
+      W_wr, Rp_rd, Rq_rd,
+      RF_s1,Rf_s0,
+      alu_s1,alu_s0: in std_logic; 
+      R_data: in std_logic_vector(WIDTH - 1 downto 0);
+      RF_W_data: in std_logic_vector(7 downto 0);
+      RF_W_addr,RF_Rp_addr,RF_Rq_addr: in std_logic_vector(ADDR_MSIZE-1 downto 0);
+      --- Out
+      W_data: out std_logic_vector(WIDTH - 1 downto 0);
+      RF_Rp_zero: out std_logic
+    );
+  end component;
+  component D_Memory is
+    port (
+      Wdata: in std_logic_vector(WIDTH - 1 downto 0);
+      addr: in std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
+      Wen, Ren, clk : in std_logic;
+      Rdata: out std_logic_vector(WIDTH - 1 DOWNTO 0)
+    ) ;
+  end component;
+  component I_Memory is
+    port (
+      addr: in std_logic_vector(I_ADDR_MSIZE - 1 downto 0);
+      rd,clk: in std_logic;
+      data: out std_logic_vector(WIDTH - 1 downto 0)
+    ) ;
+  end component;
+
+  --- Sinais Control unit para/de I_memory
+  signal Cu_to_I_Mem: std_logic_vector(I_ADDR_MSIZE - 1 downto 0);
+  signal Cu_to_I_Mem_rd: std_logic;
+  signal I_Mem_to_Cu: std_logic_vector(WIDTH - 1 downto 0);
+
+  --- Sinais Control unit de/para D_memory
+  signal Cu_to_D_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
+  signal Cu_to_D_rd,Cu_to_D_wr: std_logic;
+  --- Sinais Datapath de/para D_memory
+  signal Dp_to_D_Memory, D_Memory_to_Dp: std_logic_vector(WIDTH - 1 downto 0);
+  --- Sinais Datapath de/para Control unit
+  signal Cu_to_Dp_W_data: std_logic_vector(7 downto 0);
+  signal Cu_to_DP_RF_s1, Cu_to_DP_RF_s0, Cu_to_DP_W_wr,Cu_to_DP_Rp_rd,
+         Cu_to_DP_Rq_rd,Cu_to_DP_alu_s1,Cu_to_DP_alu_s0: std_logic;
+  signal Cu_to_DP_RF_W_addr,Cu_to_DP_RF_Rp_addr,Cu_to_DP_RF_Rq_addr: std_logic_vector(RF_ADDR_MSIZE-1 downto 0);
+  signal Dp_to_Cu_RF_Rp_zero: std_logic;
+
+
+
+begin
+  --- I_memory 
+  i0: I_Memory port map(addr => Cu_to_I_Mem, rd => Cu_to_I_Mem_rd, clk => clk, data => I_Mem_to_Cu);
+  --- D_memory
+  d0: D_Memory port map(Wdata => Dp_to_D_Memory,addr => Cu_to_D_addr,Wen => Cu_to_D_wr,Ren => Cu_to_D_rd,
+              clk => clk, Rdata => D_Memory_to_Dp);
+  --- Datapath
+  dp0: Datapath port map(clk => clk, W_wr =>Cu_to_DP_W_wr,Rp_rd => Cu_to_DP_Rp_rd, Rq_rd => Cu_to_DP_Rq_rd,
+                RF_s1 => Cu_to_DP_RF_s1,Rf_s0 => Cu_to_DP_RF_s0,alu_s1 => Cu_to_DP_RF_s1,
+                R_data =>D_Memory_to_Dp,RF_W_data => Cu_to_Dp_W_data, RF_W_addr=> Cu_to_DP_RF_W_addr,
+                RF_Rp_addr => Cu_to_DP_RF_Rp_addr, RF_Rq_addr => Cu_to_DP_RF_Rq_addr,
+                W_data => Dp_to_D_Memory, RF_Rp_zero => Dp_to_Cu_RF_Rp_zero);
+  --- CntrlU
+  ct0: ControlUnit port map();
+end arch ; -- arch

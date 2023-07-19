@@ -5,14 +5,13 @@ use ieee.numeric_std.all;
 entity I_Memory is
     generic(
         WIDTH: integer := 16;
-        ADDR_MSIZE: integer := 16
+        I_ADDR_MSIZE: integer := 16
     );
     port (
-        addr: in std_logic_vector(ADDR_MSIZE - 1 downto 0);
+        addr: in std_logic_vector(I_ADDR_MSIZE - 1 downto 0);
         rd,clk: in std_logic;
         data: out std_logic_vector(WIDTH - 1 downto 0)
-    ---co: out std_logic
-  ) ;
+    ) ;
 end I_Memory;
 
 architecture main of I_Memory is
