@@ -8,6 +8,6 @@ entity Processador_7Instrucoes is
         ADDR_MSIZE: integer := 4
     );
     port (
-
+    
   ) ;
 end Processador_7Instrucoes;
