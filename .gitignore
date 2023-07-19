@@ -1,5 +1,5 @@
-ALU/output_files/*
-ALU/incremental_db/*
-ALU/simulation/*
-ALU/db/*
+*/output_files/*
+*/incremental_db/*
+*/simulation/*
+*/db/*
 *.vwf
