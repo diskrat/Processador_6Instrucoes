@@ -71,7 +71,7 @@ architecture arch of Datapath is
     
       ----W_data
       W_data <= Rp_data_to_a;
-      RP_data <= Rp_data_to_a;
-      RQ_data <= Rq_data_to_b;
+      RP_data <= W_data;
+      RQ_data <= Rq_data_to_b
 
 end arch ; -- arch
