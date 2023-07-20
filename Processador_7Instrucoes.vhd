@@ -10,8 +10,10 @@ entity Processador_7Instrucoes is
         I_ADDR_MSIZE: integer :=16
     );
     port (
-      clk, reset: in std_logic;
-      RP_data, RQ_data: out std_logic_vector(WIDTH - 1 downto 0)
+      clk, reset,sig_mem_esc: in std_logic;
+      ADDR_ext: in std_logic_vector( D_ADDR_MSIZE -1 downto 0);
+      RP_data, RQ_data,data: out std_logic_vector(WIDTH - 1 downto 0)
+    
 
     ) ;
 end Processador_7Instrucoes;
@@ -23,7 +25,8 @@ architecture arch of Processador_7Instrucoes is
       RF_Rp_zero: in std_logic;
       I_data : in std_logic_vector(WIDTH-1 downto 0);
       PC_set : in std_logic_vector(WIDTH-1 downto 0);
-      I_rd, D_rd, D_wr, RF_W_Wen, RF_Rp_Ren, RF_Rq_Ren,D_sel : out std_logic;
+      I_rd, D_rd, D_wr, RF_W_Wen, RF_Rp_Ren, RF_Rq_Ren: out std_logic;
+      D_sel: out std_logic_vector (1 downto 0);
       RF_W_addr, RF_Rp_addr, RF_Rq_addr : out std_logic_vector(3 DOWNTO 0);
       RF_Sel, ALU_Sel : out std_logic_vector(1 DOWNTO 0);
       D_addr, RF_W_Data : out std_logic_vector(7 DOWNTO 0);
@@ -60,13 +63,21 @@ architecture arch of Processador_7Instrucoes is
       data: out std_logic_vector(WIDTH - 1 downto 0)
     ) ;
   end component;
-  component Mux2x1_8bit is
+  component Mux3x1_8bit is
     port (
-      s:in  std_logic;
-      a,b: in std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
+      s:in  std_logic_vector(1 downto 0);
+      a,b,c: in std_logic_vector(D_ADDR_MSIZE- 1 downto 0);
 
       q: out std_logic_vector(D_ADDR_MSIZE - 1 downto 0)
-    );
+    ) ;
+  end component;
+  component Mux2x1_16bit is
+    port (
+      s:in  std_logic;
+      a,b: in std_logic_vector(WIDTH- 1 downto 0);
+
+      q: out std_logic_vector(WIDTH - 1 downto 0)
+    ) ;
   end component;
 
   --- Sinais Control unit para/de I_memory
@@ -88,10 +99,12 @@ architecture arch of Processador_7Instrucoes is
   signal Mux_to_D_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
   --- Sinal ControlUnit to Mux
   signal Cu_to_Mux_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
-  signal Cu_to_Mux_sel: std_logic;
+  signal Cu_to_Mux_sel: std_logic_vector( 1 downto 0);
   --- Sinal RF to Mux
   signal RF_to_Mux_addr: std_logic_vector(WIDTH - 1 downto 0);
   signal Slice_RF_to_Mux_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
+
+
 
 begin
   --- I_memory 
@@ -116,7 +129,9 @@ begin
             I_addr=>Cu_to_I_Mem,D_sel => Cu_to_Mux_sel);
 
   Slice_RF_to_Mux_addr <= RF_to_Mux_addr(D_ADDR_MSIZE - 1 downto 0);
-  m0: Mux2x1_8bit port map( s => Cu_to_Mux_sel, a => Cu_to_Mux_addr, b => Slice_RF_to_Mux_addr, q => Mux_to_D_addr);
+  m0: Mux3x1_8bit port map( s => Cu_to_Mux_sel, a => Cu_to_Mux_addr, b => Slice_RF_to_Mux_addr, c=> ADDR_ext, q => Mux_to_D_addr);
 
-  RQ_data <= RF_to_Mux_addr;
+  mx0: Mux2x1_16bit port map( s => sig_mem_esc, a =>Dp_to_D_Memory , b =>D_Memory_to_Dp, q => RQ_data);
+
+  data <= RF_to_Mux_addr;
 end arch ; -- arch

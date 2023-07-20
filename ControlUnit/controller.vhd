@@ -8,8 +8,8 @@ port(
 	IR03, IR47, IR811, OPCODE : in std_logic_vector(3 DOWNTO 0);
 	RF_RP_zero: in std_logic;
 	PC_ld, PC_clr, PC_inc, i_rd, IR_ld, D_rd, D_wr, RF_W_wr, RF_s1,
-	RF_s0, RF_Rp_rd, RF_Rq_rd, alu_s1, alu_s0, PC_sel,D_sel
-	: out std_logic;
+	RF_s0, RF_Rp_rd, RF_Rq_rd, alu_s1, alu_s0, PC_sel: out std_logic;
+	D_sel: out std_logic_vector (1 downto 0);
 	D_addr03, D_addr47, RF_W_data03, RF_W_data47, RF_W_addr, RF_Rp_addr,
 	RF_Rq_addr : out std_logic_vector(3 DOWNTO 0)
 );
@@ -17,7 +17,7 @@ end entity controller;
 
 architecture main of Controller is
 	type states is (Init, Fetch, Decode, Load, Store, Add, LoadConst,
-		Subtract, JumpIfZero, JumpIfZeroJmp, LDAI);
+		Subtract, JumpIfZero, JumpIfZeroJmp, LDAI, RDall);
     signal stateReg, nextState : states;
 	
 begin
@@ -56,7 +56,7 @@ begin
 				alu_s1 <= '0';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '0';
+				D_sel <= "00";
 				nextState <= Fetch;
 			when Fetch =>
 				PC_ld <= '0';
@@ -81,7 +81,7 @@ begin
 				alu_s1 <= '0';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '0';
+				D_sel <= "00";
 				nextState <= Decode;
 			when Decode =>
 				PC_ld <= '0';
@@ -106,7 +106,7 @@ begin
 				alu_s1 <= '0';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '0';
+				D_sel <= "00";
 				if (OPCODE = "0000") then
 					nextState <= Load;
 				elsif (OPCODE = "0001") then
@@ -121,6 +121,8 @@ begin
 					nextState <= JumpIfZero;
 				elsif (OPCODE = "0110") then
 					nextState <= LDAI;
+				elsif (OPCODE = "1111") then
+					nextState <= RDall;
 				else
 					nextState <= Fetch;
 				end if;
@@ -147,7 +149,7 @@ begin
 				alu_s1 <= '0';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '0';
+				D_sel <= "00";
 				nextState <= Fetch;
 			when Store =>
 				PC_ld <= '0';
@@ -172,7 +174,7 @@ begin
 				alu_s1 <= '0';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '0';
+				D_sel <= "00";
 				nextState <= Fetch;
 			when Add =>
 				PC_ld <= '0';
@@ -197,7 +199,7 @@ begin
 				alu_s1 <= '0';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '0';
+				D_sel <= "00";
 				nextState <= Fetch;
 			when LoadConst =>
 				PC_ld <= '0';
@@ -222,7 +224,7 @@ begin
 				alu_s1 <= '0';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '0';
+				D_sel <= "00";
 				nextState <= Fetch;
 			when Subtract =>
 				PC_ld <= '0';
@@ -247,7 +249,7 @@ begin
 				alu_s1 <= '1';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '0';
+				D_sel <= "00";
 				nextState <= Fetch;
 			when JumpIfZero =>
 				PC_ld <= '0';
@@ -272,7 +274,7 @@ begin
 				alu_s1 <= '0';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '0';
+				D_sel <= "00";
 				if (RF_RP_zero = '0') then
 					nextState <= Fetch;
 				else
@@ -301,7 +303,7 @@ begin
 				alu_s1 <= '0';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '0';
+				D_sel <= "00";
 				nextState <= Fetch;
 			when LDAI =>
 				PC_ld <= '0';
@@ -317,6 +319,31 @@ begin
 				RF_W_data47 <= "0000";
 				RF_W_wr <= '1';
 				RF_W_addr <= IR47;
+				RF_s1 <= '0';
+				RF_s0 <= '1';
+				RF_Rp_addr <= "0000";
+				RF_Rp_rd <= '1';
+				RF_Rq_addr <= IR03;
+				RF_Rq_rd <= '1';
+				alu_s1 <= '0';
+				alu_s0 <= '0';
+				PC_sel <= '0';
+				D_sel <= "01";
+				nextState <= Fetch;
+			when RDall =>
+				PC_ld <= '0';
+				PC_clr <= '0';
+				PC_inc <= '0';
+				i_rd <= '1';
+				IR_ld <= '0';
+				D_addr03 <= "0000";
+				D_addr47 <= "0000";
+				D_rd <= '1';
+				D_wr <= '0';
+				RF_W_data03 <= "0000";
+				RF_W_data47 <= "0000";
+				RF_W_wr <= '0';
+				RF_W_addr <= IR47;
 				RF_s1 <= '1';
 				RF_s0 <= '0';
 				RF_Rp_addr <= "0000";
@@ -326,8 +353,8 @@ begin
 				alu_s1 <= '0';
 				alu_s0 <= '0';
 				PC_sel <= '0';
-				D_sel <= '1';
-				nextState <= Fetch;
+				D_sel <= "10";
+
 				
 		
 		end case;
