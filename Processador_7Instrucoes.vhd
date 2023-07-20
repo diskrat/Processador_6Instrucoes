@@ -60,12 +60,12 @@ architecture arch of Processador_7Instrucoes is
       data: out std_logic_vector(WIDTH - 1 downto 0)
     ) ;
   end component;
-  component Mux2x1_16bit is
+  component Mux2x1_8bit is
     port (
       s:in  std_logic;
-      a,b: in std_logic_vector(WIDTH - 1 downto 0);
+      a,b: in std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
 
-      q: out std_logic_vector(WIDTH - 1 downto 0)
+      q: out std_logic_vector(D_ADDR_MSIZE - 1 downto 0)
     );
   end component;
 
@@ -88,7 +88,10 @@ architecture arch of Processador_7Instrucoes is
   signal Mux_to_D_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
   --- Sinal ControlUnit to Mux
   signal Cu_to_Mux_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
-
+  signal Cu_to_Mux_sel: std_logic;
+  --- Sinal RF to Mux
+  signal RF_to_Mux_addr: std_logic_vector(WIDTH - 1 downto 0);
+  signal Slice_RF_to_Mux_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
 
 begin
   --- I_memory 
@@ -101,7 +104,7 @@ begin
                 RF_s1 => Cu_to_RF_Sel(1),Rf_s0 =>Cu_to_RF_Sel(0) ,alu_s0=> Cu_to_Alu_sel(0),alu_s1 => Cu_to_Alu_sel(1),
                 R_data =>D_Memory_to_Dp,RF_W_data => Cu_to_Dp_W_data, RF_W_addr=> Cu_to_DP_RF_W_addr,
                 RF_Rp_addr => Cu_to_DP_RF_Rp_addr, RF_Rq_addr => Cu_to_DP_RF_Rq_addr,
-                W_data => Dp_to_D_Memory, RF_Rp_zero => Dp_to_Cu_RF_Rp_zero, RQ_data=>RQ_data, RP_data=>RP_data);
+                W_data => Dp_to_D_Memory, RF_Rp_zero => Dp_to_Cu_RF_Rp_zero, RQ_data=>RF_to_Mux_addr, RP_data=>RP_data);
   --- CntrlU 
   ct0: ControlUnit port map(  clk=> clk, reset=>reset,
             RF_Rp_zero=> Dp_to_Cu_RF_Rp_zero, I_data=> I_Mem_to_Cu,
@@ -110,5 +113,10 @@ begin
             RF_W_addr=>Cu_to_DP_RF_W_addr, RF_Rp_addr=>Cu_to_DP_RF_Rp_addr, RF_Rq_addr=> Cu_to_DP_RF_Rq_addr,
             RF_Sel=> Cu_to_RF_Sel, ALU_Sel=> Cu_to_Alu_sel ,
             D_addr=>Cu_to_Mux_addr, RF_W_Data=>Cu_to_Dp_W_data,
-            I_addr=>Cu_to_I_Mem,D_sel => );
+            I_addr=>Cu_to_I_Mem,D_sel => Cu_to_Mux_sel);
+
+  Slice_RF_to_Mux_addr <= RF_to_Mux_addr(D_ADDR_MSIZE - 1 downto 0);
+  m0: Mux2x1_8bit port map( s => Cu_to_Mux_sel, a => Cu_to_Mux_addr, b => Slice_RF_to_Mux_addr, q => Mux_to_D_addr);
+
+  RQ_data <= RF_to_Mux_addr;
 end arch ; -- arch
