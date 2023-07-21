@@ -10,8 +10,9 @@ entity Processador_7Instrucoes is
         I_ADDR_MSIZE: integer :=16
     );
     port (
-      clk, reset,sig_mem_esc,read_only: in std_logic;
+      clk, reset,sig_mem_esc: in std_logic;
       ADDR_ext: in std_logic_vector( D_ADDR_MSIZE -1 downto 0);
+      read_only: out std_logic;
       RP_data, RQ_data,data: out std_logic_vector(WIDTH - 1 downto 0)
     
 
@@ -79,11 +80,11 @@ architecture arch of Processador_7Instrucoes is
       q: out std_logic_vector(WIDTH - 1 downto 0)
     ) ;
   end component;
-  component Mux2x1_8bit is
+  component Mux2x1_4bit is
     port (
       s:in  std_logic;
-      a,b: in std_logic_vector(WIDTH - 1 downto 0);
-      q: out std_logic_vector(WIDTH - 1 downto 0)
+      a,b: in std_logic_vector(RF_ADDR_MSIZE- 1 downto 0);
+      q: out std_logic_vector(RF_ADDR_MSIZE - 1 downto 0)
     ) ;
   end component;
 
@@ -135,15 +136,17 @@ begin
             RF_W_addr=>Cu_to_DP_RF_W_addr, RF_Rp_addr=>Cu_to_DP_RF_Rp_addr, RF_Rq_addr=> Cu_to_DP_RF_Rq_addr,
             RF_Sel=> Cu_to_RF_Sel, ALU_Sel=> Cu_to_Alu_sel ,
             D_addr=>Cu_to_Mux_addr, RF_W_Data=>Cu_to_Dp_W_data,
-            I_addr=>Cu_to_I_Mem,D_sel => Cu_to_Mux_sel);
+            I_addr=>Cu_to_I_Mem,D_sel => Cu_to_Mux_sel,RF_Rp_addr_Sel=>Cu_to_RF_Rq_addr_sel);
 
   Slice_RF_to_Mux_addr <= RF_to_Mux_addr(D_ADDR_MSIZE - 1 downto 0);
   m0: Mux3x1_8bit port map( s => Cu_to_Mux_sel, a => Cu_to_Mux_addr, b => Slice_RF_to_Mux_addr, c=> ADDR_ext, q => Mux_to_D_addr);
 
   mx0: Mux2x1_16bit port map( s => sig_mem_esc, a =>Dp_to_D_Memory , b =>D_Memory_to_Dp, q => RQ_data);
 
-  ADDR_ext_slice <= ADDR_ext;
-  mxaddr0: Mux2x1_8bit port map( s => Cu_to_RF_Rq_addr_sel, a => Cu_to_DP_RF_Rp_addr, b => ADDR_ext_slice, q => Rf_Rq_Mux_addr);
+  ADDR_ext_slice <= ADDR_ext(RF_ADDR_MSIZE - 1 downto 0);
+
+  
+  mxaddr0: Mux2x1_4bit port map( s => Cu_to_RF_Rq_addr_sel, a => Cu_to_DP_RF_Rp_addr, b => ADDR_ext_slice, q => Rf_Rq_Mux_addr);
 
   data <= RF_to_Mux_addr;
   read_only <= Cu_to_RF_Rq_addr_sel;

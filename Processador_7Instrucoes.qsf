@@ -43,28 +43,6 @@ set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "02:12:03  JULY 19, 2023"
 set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
-set_global_assignment -name VHDL_FILE Datapath/RegisterFile/RegisterFile.vhd
-set_global_assignment -name VHDL_FILE Datapath/RegisterFile/reg16_parallel.vhd
-set_global_assignment -name VHDL_FILE Datapath/RegisterFile/reg.vhd
-set_global_assignment -name VHDL_FILE Datapath/RegisterFile/mux2x1.vhd
-set_global_assignment -name VHDL_FILE Datapath/RegisterFile/flipflop_d.vhd
-set_global_assignment -name VHDL_FILE Datapath/RegisterFile/decoder.vhd
-set_global_assignment -name VHDL_FILE Datapath/ALU/fullAdder16bit.vhd
-set_global_assignment -name VHDL_FILE Datapath/ALU/full_adder.vhd
-set_global_assignment -name VHDL_FILE Datapath/ALU/ext16bit.vhd
-set_global_assignment -name VHDL_FILE Datapath/ALU/ciext.vhd
-set_global_assignment -name VHDL_FILE Datapath/ALU/ALU.vhd
-set_global_assignment -name VHDL_FILE Datapath/ALU/abext.vhd
-set_global_assignment -name VHDL_FILE Memory/I_Memory.vhd
-set_global_assignment -name VHDL_FILE Memory/D_Memory.vhd
-set_global_assignment -name VHDL_FILE Datapath/Mux3x1_16bit.vhd
-set_global_assignment -name VHDL_FILE Datapath/Datapath.vhd
-set_global_assignment -name VHDL_FILE ControlUnit/PC.vhd
-set_global_assignment -name VHDL_FILE ControlUnit/IR.vhd
-set_global_assignment -name VHDL_FILE ControlUnit/ControlUnit.vhd
-set_global_assignment -name VHDL_FILE ControlUnit/controller.vhd
-set_global_assignment -name VHDL_FILE Processador_7Instrucoes.vhd
-set_global_assignment -name VECTOR_WAVEFORM_FILE Datapath/RegisterFile/Waveform.vwf
 set_global_assignment -name SIMULATION_MODE FUNCTIONAL
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
@@ -102,7 +80,35 @@ set_location_assignment PIN_AF23 -to data[1]
 set_location_assignment PIN_AE23 -to data[0]
 set_location_assignment PIN_V2 -to sig_mem_esc
 set_location_assignment PIN_V1 -to reset
-set_global_assignment -name VECTOR_WAVEFORM_FILE output_files/Waveform.vwf
 set_global_assignment -name VECTOR_OUTPUT_FORMAT VWF
+set_global_assignment -name VHDL_FILE Mux3x1_8bit.vhd
+set_global_assignment -name VHDL_FILE Mux2x1_8bit.vhd
+set_global_assignment -name VHDL_FILE Mux2x1_16bit.vhd
+set_global_assignment -name VHDL_FILE Datapath/RegisterFile/RegisterFile.vhd
+set_global_assignment -name VHDL_FILE Datapath/RegisterFile/reg16_parallel.vhd
+set_global_assignment -name VHDL_FILE Datapath/RegisterFile/reg.vhd
+set_global_assignment -name VHDL_FILE Datapath/RegisterFile/mux2x1.vhd
+set_global_assignment -name VHDL_FILE Datapath/RegisterFile/flipflop_d.vhd
+set_global_assignment -name VHDL_FILE Datapath/RegisterFile/decoder.vhd
+set_global_assignment -name VHDL_FILE Datapath/ALU/fullAdder16bit.vhd
+set_global_assignment -name VHDL_FILE Datapath/ALU/full_adder.vhd
+set_global_assignment -name VHDL_FILE Datapath/ALU/ext16bit.vhd
+set_global_assignment -name VHDL_FILE Datapath/ALU/ciext.vhd
+set_global_assignment -name VHDL_FILE Datapath/ALU/ALU.vhd
+set_global_assignment -name VHDL_FILE Datapath/ALU/abext.vhd
+set_global_assignment -name VHDL_FILE Memory/I_Memory.vhd
+set_global_assignment -name VHDL_FILE Memory/D_Memory.vhd
+set_global_assignment -name VHDL_FILE Datapath/Mux3x1_16bit.vhd
+set_global_assignment -name VHDL_FILE Datapath/Datapath.vhd
+set_global_assignment -name VHDL_FILE ControlUnit/PC.vhd
+set_global_assignment -name VHDL_FILE ControlUnit/IR.vhd
+set_global_assignment -name VHDL_FILE ControlUnit/ControlUnit.vhd
+set_global_assignment -name VHDL_FILE ControlUnit/controller.vhd
+set_global_assignment -name VHDL_FILE Processador_7Instrucoes.vhd
+set_global_assignment -name VECTOR_WAVEFORM_FILE Datapath/RegisterFile/Waveform.vwf
+set_global_assignment -name VECTOR_WAVEFORM_FILE output_files/Waveform.vwf
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform.vwf
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
-set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE "C:/Users/vitor/Documents/opcode/Processador_7Instrucoes/output_files/Waveform.vwf"
+set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE "C:/Users/joaod/Downloads/Processador_6Instrucoes/Waveform.vwf"
