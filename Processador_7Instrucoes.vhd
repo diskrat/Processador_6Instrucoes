@@ -10,7 +10,7 @@ entity Processador_7Instrucoes is
         I_ADDR_MSIZE: integer :=16
     );
     port (
-      clk, reset,sig_mem_esc: in std_logic;
+      clk, reset,sig_mem_esc,read_only: in std_logic;
       ADDR_ext: in std_logic_vector( D_ADDR_MSIZE -1 downto 0);
       RP_data, RQ_data,data: out std_logic_vector(WIDTH - 1 downto 0)
     
@@ -25,7 +25,7 @@ architecture arch of Processador_7Instrucoes is
       RF_Rp_zero: in std_logic;
       I_data : in std_logic_vector(WIDTH-1 downto 0);
       PC_set : in std_logic_vector(WIDTH-1 downto 0);
-      I_rd, D_rd, D_wr, RF_W_Wen, RF_Rp_Ren, RF_Rq_Ren: out std_logic;
+      I_rd, D_rd, D_wr, RF_W_Wen, RF_Rp_Ren, RF_Rq_Ren,RF_Rp_addr_Sel: out std_logic;
       D_sel: out std_logic_vector (1 downto 0);
       RF_W_addr, RF_Rp_addr, RF_Rq_addr : out std_logic_vector(3 DOWNTO 0);
       RF_Sel, ALU_Sel : out std_logic_vector(1 DOWNTO 0);
@@ -79,6 +79,13 @@ architecture arch of Processador_7Instrucoes is
       q: out std_logic_vector(WIDTH - 1 downto 0)
     ) ;
   end component;
+  component Mux2x1_8bit is
+    port (
+      s:in  std_logic;
+      a,b: in std_logic_vector(WIDTH - 1 downto 0);
+      q: out std_logic_vector(WIDTH - 1 downto 0)
+    ) ;
+  end component;
 
   --- Sinais Control unit para/de I_memory
   signal Cu_to_I_Mem: std_logic_vector(I_ADDR_MSIZE - 1 downto 0);
@@ -103,6 +110,8 @@ architecture arch of Processador_7Instrucoes is
   --- Sinal RF to Mux
   signal RF_to_Mux_addr: std_logic_vector(WIDTH - 1 downto 0);
   signal Slice_RF_to_Mux_addr: std_logic_vector(D_ADDR_MSIZE - 1 downto 0);
+  signal Cu_to_RF_Rq_addr_sel: std_logic;
+  signal ADDR_ext_slice,Rf_Rq_Mux_addr: std_logic_vector(RF_ADDR_MSIZE - 1 downto 0);
 
 
 
@@ -116,7 +125,7 @@ begin
   dp0: Datapath port map(clk => clk, W_wr =>Cu_to_DP_W_wr,Rp_rd => Cu_to_DP_Rp_rd, Rq_rd => Cu_to_DP_Rq_rd,
                 RF_s1 => Cu_to_RF_Sel(1),Rf_s0 =>Cu_to_RF_Sel(0) ,alu_s0=> Cu_to_Alu_sel(0),alu_s1 => Cu_to_Alu_sel(1),
                 R_data =>D_Memory_to_Dp,RF_W_data => Cu_to_Dp_W_data, RF_W_addr=> Cu_to_DP_RF_W_addr,
-                RF_Rp_addr => Cu_to_DP_RF_Rp_addr, RF_Rq_addr => Cu_to_DP_RF_Rq_addr,
+                RF_Rp_addr => Rf_Rq_Mux_addr, RF_Rq_addr => Cu_to_DP_RF_Rq_addr,
                 W_data => Dp_to_D_Memory, RF_Rp_zero => Dp_to_Cu_RF_Rp_zero, RQ_data=>RF_to_Mux_addr, RP_data=>RP_data);
   --- CntrlU 
   ct0: ControlUnit port map(  clk=> clk, reset=>reset,
@@ -133,5 +142,9 @@ begin
 
   mx0: Mux2x1_16bit port map( s => sig_mem_esc, a =>Dp_to_D_Memory , b =>D_Memory_to_Dp, q => RQ_data);
 
+  ADDR_ext_slice <= ADDR_ext;
+  mxaddr0: Mux2x1_8bit port map( s => Cu_to_RF_Rq_addr_sel, a => Cu_to_DP_RF_Rp_addr, b => ADDR_ext_slice, q => Rf_Rq_Mux_addr);
+
   data <= RF_to_Mux_addr;
+  read_only <= Cu_to_RF_Rq_addr_sel;
 end arch ; -- arch

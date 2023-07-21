@@ -8,7 +8,7 @@ port(
 	IR03, IR47, IR811, OPCODE : in std_logic_vector(3 DOWNTO 0);
 	RF_RP_zero: in std_logic;
 	PC_ld, PC_clr, PC_inc, i_rd, IR_ld, D_rd, D_wr, RF_W_wr, RF_s1,
-	RF_s0, RF_Rp_rd, RF_Rq_rd, alu_s1, alu_s0, PC_sel: out std_logic;
+	RF_s0, RF_Rp_rd, RF_Rq_rd, alu_s1, alu_s0, PC_sel,RF_Rp_addr_Sel: out std_logic;
 	D_sel: out std_logic_vector (1 downto 0);
 	D_addr03, D_addr47, RF_W_data03, RF_W_data47, RF_W_addr, RF_Rp_addr,
 	RF_Rq_addr : out std_logic_vector(3 DOWNTO 0)
@@ -57,6 +57,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "00";
+				RF_Rp_addr_Sel <= '0';
 				nextState <= Fetch;
 			when Fetch =>
 				PC_ld <= '0';
@@ -82,6 +83,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "00";
+				RF_Rp_addr_Sel <= '0';
 				nextState <= Decode;
 			when Decode =>
 				PC_ld <= '0';
@@ -107,6 +109,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "00";
+				RF_Rp_addr_Sel <= '0';
 				if (OPCODE = "0000") then
 					nextState <= Load;
 				elsif (OPCODE = "0001") then
@@ -150,6 +153,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "00";
+				RF_Rp_addr_Sel <= '0';
 				nextState <= Fetch;
 			when Store =>
 				PC_ld <= '0';
@@ -175,6 +179,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "00";
+				RF_Rp_addr_Sel <= '0';
 				nextState <= Fetch;
 			when Add =>
 				PC_ld <= '0';
@@ -200,6 +205,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "00";
+				RF_Rp_addr_Sel <= '0';
 				nextState <= Fetch;
 			when LoadConst =>
 				PC_ld <= '0';
@@ -225,6 +231,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "00";
+				RF_Rp_addr_Sel <= '0';
 				nextState <= Fetch;
 			when Subtract =>
 				PC_ld <= '0';
@@ -250,6 +257,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "00";
+				RF_Rp_addr_Sel <= '0';
 				nextState <= Fetch;
 			when JumpIfZero =>
 				PC_ld <= '0';
@@ -275,6 +283,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "00";
+				RF_Rp_addr_Sel <= '0';
 				if (RF_RP_zero = '0') then
 					nextState <= Fetch;
 				else
@@ -304,6 +313,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "00";
+				RF_Rp_addr_Sel <= '0';
 				nextState <= Fetch;
 			when LDAI =>
 				PC_ld <= '0';
@@ -329,6 +339,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "01";
+				RF_Rp_addr_Sel <= '0';
 				nextState <= Fetch;
 			when RDall =>
 				PC_ld <= '0';
@@ -354,6 +365,7 @@ begin
 				alu_s0 <= '0';
 				PC_sel <= '0';
 				D_sel <= "10";
+				RF_Rp_addr_Sel <= '1';
 
 				
 		
